@@ -121,28 +121,23 @@ def process_dir(main_dir, tags):
 ##### Adding tags #####
 
 
-def add_tags_from_file(file, tags):
-    log("Processing file:", file)
-    basename = os.path.basename(file)
+func_re = re.compile("^([a-z][a-zA-Z0-9_@]*)\\s*\\(", re.M)
+recmac_re = re.compile("^-\\s*(record|define)\\s*\\(\\s*([a-zA-Z0-9_@]*)\\b", re.M)
+
+def add_tags_from_file(f, tags):
+    log("Processing file:", f)
+    basename = os.path.basename(f)
     name_and_ext = os.path.splitext(basename)
-    add_file_tag(tags, file, basename, name_and_ext)
-    for line in fileinput.input(file):
-        scan_tags(file, name_and_ext, line, tags)
+    add_file_tag(tags, f, basename, name_and_ext)
+    with open(f) as file:
+        s = file.read()
 
+        for func_match in re.finditer(func_re, s):
+            add_func_tags(tags, f, name_and_ext, func_match.group(1))
 
-func_re = re.compile("^([a-z][a-zA-Z0-9_@]*)\\s*\\(")
-recmac_re = re.compile("^-\\s*(record|define)\\s*\\(\\s*([a-zA-Z0-9_@]*)\\b")
-
-def scan_tags(file, name_and_ext, line, tags):
-    func_match = re.match(func_re, line)
-    if func_match:
-        add_func_tags(tags, file, name_and_ext, func_match.group(1))
-        return
-
-    recmac_match = re.match(recmac_re, line)
-    if recmac_match:
-        add_recmac_tag(tags, file, name_and_ext, recmac_match.group(1),
-                       recmac_match.group(2))
+        for recmac_match in re.finditer(recmac_re, s):
+            add_recmac_tag(tags, f, name_and_ext, recmac_match.group(1),
+                           recmac_match.group(2))
 
 
 def add_file_tag(tags, file, basename, name_and_ext):
