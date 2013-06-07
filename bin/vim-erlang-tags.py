@@ -129,7 +129,7 @@ def add_tags_from_file(f, tags):
     basename = os.path.basename(f)
     name_and_ext = os.path.splitext(basename)
     add_file_tag(tags, f, basename, name_and_ext)
-    with open(f) as file:
+    with open(f, encoding='latin1') as file:
         s = file.read()
 
         for func_match in re.finditer(func_re, s):
