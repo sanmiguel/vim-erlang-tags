@@ -238,7 +238,6 @@ def parse_args():
 
 def main():
     log('Arguments:', args)
-    descr = ('description: it does nothing yet')
     tags = create_tags(args.files) 
     tags_to_file(tags, args.tagsfilename)
 
