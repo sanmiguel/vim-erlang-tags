@@ -19,7 +19,7 @@ else
     let b:vim_erlang_tags_loaded = 1
 endif
 
-autocmd FileType erlang call VimErlangTagsDefineMappings()
+autocmd FileType erlang set isk+=:
 
 let s:script_opts = ""
 
@@ -39,18 +39,3 @@ function! VimErlangTags()
 endfunction
 
 command! ErlangTags call VimErlangTags()
-
-function! VimErlangTagsSelect()
-    let orig_isk = &isk
-    set isk+=:
-    normal "_vaw
-    let &isk = orig_isk
-endfunction
-
-function! VimErlangTagsDefineMappings()
-    nnoremap <buffer> <c-]>         :call VimErlangTagsSelect()<cr><c-]>
-    nnoremap <buffer> g<LeftMouse>  :call VimErlangTagsSelect()<cr>g<LeftMouse>
-    nnoremap <buffer> <c-LeftMouse> :call VimErlangTagsSelect()<cr><c-LeftMouse>
-    nnoremap <buffer> g]            :call VimErlangTagsSelect()<cr>g]
-    nnoremap <buffer> g<c-]>        :call VimErlangTagsSelect()<cr>g<c-]>
-endfunction
